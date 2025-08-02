@@ -26,6 +26,9 @@ public class Wave : MonoBehaviour {
 
     [Tooltip("a number of enemies in the wave")]
     public int count;
+    
+    [Tooltip("Enemy shield")]
+    public int shield;
 
     [Tooltip("path passage speed")]
     public float speed;
@@ -71,6 +74,7 @@ public class Wave : MonoBehaviour {
             enemyComponent.shotChance = shooting.shotChance; 
             enemyComponent.shotTimeMin = shooting.shotTimeMin; 
             enemyComponent.shotTimeMax = shooting.shotTimeMax;
+            enemyComponent.shield = shield;
             newEnemy.SetActive(true);      
             yield return new WaitForSeconds(timeBetween); 
         }

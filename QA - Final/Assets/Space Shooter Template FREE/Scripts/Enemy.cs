@@ -17,6 +17,9 @@ public class Enemy : MonoBehaviour {
     [Tooltip("VFX prefab generating after destruction")]
     public GameObject destructionVFX;
     public GameObject hitEffect;
+
+    [Tooltip("Amount of damage the shield can absorb")]
+    public int shield;
     
     [HideInInspector] public int shotChance; //probability of 'Enemy's' shooting during tha path
     [HideInInspector] public float shotTimeMin, shotTimeMax; //max and min time for shooting from the beginning of the path
@@ -37,17 +40,28 @@ public class Enemy : MonoBehaviour {
     }
 
     //method of getting damage for the 'Enemy'
-    public void GetDamage(int damage) 
+    public virtual void GetDamage(int damage)
     {
-        health -= damage;           //reducing health for damage value, if health is less than 0, starting destruction procedure
+        if (shield > 0)
+        {
+            int shieldAbsorb = Mathf.Min(damage, shield);
+            shield -= shieldAbsorb;
+            damage -= shieldAbsorb;
+            
+            if (damage <= 0)
+                return;
+        }
+
+        health -= damage;
         if (health <= 0)
             Destruction();
-        else
-            Instantiate(hitEffect,transform.position,Quaternion.identity,transform);
-    }    
+        else if (hitEffect != null)
+            Instantiate(hitEffect, transform.position, Quaternion.identity, transform);
+    }
+ 
 
     //if 'Enemy' collides 'Player', 'Player' gets the damage equal to projectile's damage value
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {

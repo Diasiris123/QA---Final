@@ -42,12 +42,15 @@ public class LevelController : MonoBehaviour {
     }
     
     //Create a new wave after a delay
-    IEnumerator CreateEnemyWave(float delay, GameObject Wave) 
+    IEnumerator CreateEnemyWave(float delay, GameObject Wave)
     {
+        var waveToSpawn = Wave;
+
         if (delay != 0)
             yield return new WaitForSeconds(delay);
-        if (Player.instance != null)
-            Instantiate(Wave);
+
+        if (Player.instance != null && waveToSpawn != null)
+            Instantiate(waveToSpawn);
     }
 
     //endless coroutine generating 'levelUp' bonuses. 

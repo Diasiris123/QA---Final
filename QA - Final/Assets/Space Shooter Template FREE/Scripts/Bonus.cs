@@ -11,7 +11,7 @@ public class Bonus : MonoBehaviour {
             {
                 PlayerShooting.instance.weaponPower++;
             }
-            Destroy(gameObject);
-        }
-    }
-}
+             Destroy(gameObject);
+         }
+     }
+ }
