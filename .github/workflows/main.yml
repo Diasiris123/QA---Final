@@ -3,7 +3,6 @@ name: Build, Test, and Deploy Unity Project
 on: [push, pull_request]
 
 jobs:
-  # Job to build the StandaloneWindows64 platform
   buildWindows:
     name: Build StandaloneWindows64
     runs-on: ubuntu-latest
@@ -18,8 +17,9 @@ jobs:
       - name: Cache Library folder
         uses: actions/cache@v3
         with:
-          path: Library
-          key: Library-StandaloneWindows64-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          # Cache the Library inside the project folder (has a space → quote it)
+          path: "QA - Final/Library"
+          key: Library-StandaloneWindows64-${{ hashFiles('QA - Final/Assets/**', 'QA - Final/Packages/**', 'QA - Final/ProjectSettings/**') }}
           restore-keys: |
             Library-StandaloneWindows64-
             Library-
@@ -35,6 +35,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 6000.0.43f1
+          projectPath: "QA - Final"              # <-- important
           targetPlatform: StandaloneWindows64
 
       - name: Upload Build Artifact
@@ -43,7 +44,6 @@ jobs:
           name: Build-StandaloneWindows64
           path: build/StandaloneWindows64
 
-  # Job to run Playmode tests
   runPlaymodeTests:
     name: Run Playmode Tests
     runs-on: ubuntu-latest
@@ -58,8 +58,8 @@ jobs:
       - name: Cache Library folder
         uses: actions/cache@v3
         with:
-          path: Library
-          key: Library-PlaymodeTests-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          path: "QA - Final/Library"
+          key: Library-PlaymodeTests-${{ hashFiles('QA - Final/Assets/**', 'QA - Final/Packages/**', 'QA - Final/ProjectSettings/**') }}
           restore-keys: |
             Library-PlaymodeTests-
             Library-
@@ -72,9 +72,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 6000.0.43f1
-          testMode: PlayMode
-          # The path where test results will be generated
+          projectPath: "QA - Final"              # <-- important
+          testMode: playmode                     # <-- lowercase
           artifactsPath: artifacts/TestResults/Playmode
+          # If you *do* want coverage, also add:
+          # coverageOptions: generateAdditionalMetrics;generateHtmlReport;generateBadgeReport;dontClear
 
       - name: Upload Playmode Test Results
         uses: actions/upload-artifact@v4
@@ -82,36 +84,31 @@ jobs:
           name: Playmode-Test-Results
           path: artifacts/TestResults/Playmode
 
-  # Job to deploy the build to GitHub Releases
   deployToGitHubReleases:
     name: Deploy to GitHub Releases
     runs-on: ubuntu-latest
-    needs: buildWindows # This job depends on the buildWindows job completing successfully
-    if: startsWith(github.ref, 'refs/tags/') # Only run this job when a tag is pushed
+    needs: buildWindows
+    if: startsWith(github.ref, 'refs/tags/')
 
     steps:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: Build-StandaloneWindows64
-          path: ./build/StandaloneWindows64 # Path where the artifact will be downloaded
+          path: ./build/StandaloneWindows64
 
       - name: Archive Build Folder
         run: tar -czvf build/StandaloneWindows64.tar.gz -C build/ StandaloneWindows64
-        # This command creates a gzipped tar archive of the StandaloneWindows64 folder.
-        # -C build/ changes the directory to 'build/' before archiving,
-        # ensuring 'StandaloneWindows64' is at the root of the archive.
-        # The archive will be named 'StandaloneWindows64.tar.gz' and placed in the 'build/' directory.
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1 # Action to create a GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          files: build/StandaloneWindows64.tar.gz # Now uploading a single compressed archive
-          name: Release ${{ github.ref_name }} # Name of the release (e.g., "Release v1.0.0")
-          body: | # Description for the release
+          files: build/StandaloneWindows64.tar.gz
+          name: Release ${{ github.ref_name }}
+          body: |
             New release based on tag ${{ github.ref_name }}.
             This release includes the StandaloneWindows64 build, compressed for easier download.
-          draft: false # Set to true to create a draft release
-          prerelease: false # Set to true for a pre-release
+          draft: false
+          prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub's built-in token for authentication
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
