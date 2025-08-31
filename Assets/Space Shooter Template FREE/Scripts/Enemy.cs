@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour {
     //if 'Enemy' collides 'Player', 'Player' gets the damage equal to projectile's damage value
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        if (collision.tag == "Player" || collision.gameObject.name == "Player")
         {
             if (Projectile.GetComponent<Projectile>() != null)
                 Player.instance.GetDamage(Projectile.GetComponent<Projectile>().damage);

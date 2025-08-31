@@ -81,7 +81,7 @@ public class EnemyTests
     public IEnumerator OnTriggerEnter2D_DamagesPlayer()
     {
         var playerGO = new GameObject("Player");
-        playerGO.tag = "Player";
+        //playerGO.tag = "Player";
         var testPlayer = playerGO.AddComponent<TestPlayer>();
         Player.instance = testPlayer;
 

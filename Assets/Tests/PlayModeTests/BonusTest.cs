@@ -13,7 +13,7 @@ public class BonusTests
     public IEnumerator SetUp()
     {
         playerGO = new GameObject("Player");
-        playerGO.tag = "Player";
+        //playerGO.tag = "Player";
         playerGO.AddComponent<BoxCollider2D>();
         
         shooting = playerGO.AddComponent<PlayerShooting>();
@@ -82,7 +82,7 @@ public class BonusTests
     public IEnumerator Bonus_IgnoresNonPlayerCollision()
     {
         var enemyGO = new GameObject("Enemy");
-        enemyGO.tag = "Enemy";
+        //enemyGO.tag = "Enemy";
         enemyGO.AddComponent<BoxCollider2D>();
 
         int before = PlayerShooting.instance.weaponPower;

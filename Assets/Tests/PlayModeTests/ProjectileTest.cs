@@ -23,7 +23,7 @@ public class ProjectileTest
     public IEnumerator EnemyBullet_HitsPlayer_TakesDamage_AndIsDestroyed()
     {
         var playerGO = new GameObject("Player");
-        playerGO.tag = "Player";
+        //playerGO.tag = "Player";
         var testPlayer = playerGO.AddComponent<TestPlayer>();
         Player.instance = testPlayer;
         playerGO.AddComponent<BoxCollider2D>();
@@ -47,7 +47,7 @@ public class ProjectileTest
     public IEnumerator PlayerBullet_HitsEnemy_TakesDamage_AndIsDestroyed()
     {
         var enemyGO = new GameObject("Enemy");
-        enemyGO.tag = "Enemy";
+        //enemyGO.tag = "Enemy";
         var testEnemy = enemyGO.AddComponent<TestEnemy>();
         enemyGO.AddComponent<BoxCollider2D>();
 
@@ -71,7 +71,7 @@ public class ProjectileTest
     public IEnumerator Bullet_IsNotDestroyed_WhenNotSetToDestroy()
     {
         var enemyGO = new GameObject("Enemy");
-        enemyGO.tag = "Enemy";
+        //enemyGO.tag = "Enemy";
         enemyGO.AddComponent<TestEnemy>();
         enemyGO.AddComponent<BoxCollider2D>();
 
@@ -93,7 +93,7 @@ public class ProjectileTest
     public IEnumerator Bullet_Ignores_OtherTags()
     {
         var wall = new GameObject("Wall");
-        wall.tag = "Untagged"; 
+        //wall.tag = "Untagged"; 
         wall.AddComponent<BoxCollider2D>();
 
         projectileGO = new GameObject("Projectile");
