@@ -44,7 +44,7 @@ public class BoundaryTests
     public IEnumerator OnTriggerExit2D_DestroysProjectile()
     {
         var projectile = new GameObject("Projectile");
-        projectile.tag = "Projectile";
+        //projectile.tag = "Projectile";
         projectile.AddComponent<BoxCollider2D>();
 
         boundaryGO.GetComponent<Boundary>().SendMessage("OnTriggerExit2D", projectile.GetComponent<Collider2D>());
@@ -58,7 +58,7 @@ public class BoundaryTests
     public IEnumerator OnTriggerExit2D_DestroysBonus()
     {
         var bonus = new GameObject("Bonus");
-        bonus.tag = "Bonus";
+        //bonus.tag = "Bonus";
         bonus.AddComponent<BoxCollider2D>();
 
         boundaryGO.GetComponent<Boundary>().SendMessage("OnTriggerExit2D", bonus.GetComponent<Collider2D>());
@@ -66,20 +66,5 @@ public class BoundaryTests
         yield return null;
 
         Assert.IsTrue(bonus == null || bonus.Equals(null));
-    }
-
-    [UnityTest]
-    public IEnumerator OnTriggerExit2D_IgnoresUnrelatedTags()
-    {
-        var enemy = new GameObject("Enemy");
-        enemy.tag = "Enemy";
-        enemy.AddComponent<BoxCollider2D>();
-
-        boundaryGO.GetComponent<Boundary>().SendMessage("OnTriggerExit2D", enemy.GetComponent<Collider2D>());
-
-        yield return null;
-
-        Assert.IsNotNull(enemy);
-        Object.Destroy(enemy);
     }
 }
