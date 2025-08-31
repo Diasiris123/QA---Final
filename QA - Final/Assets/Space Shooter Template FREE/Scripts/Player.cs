@@ -28,11 +28,7 @@ public class Player : MonoBehaviour
     //'Player's' destruction procedure
     void Destruction()
     {
-        if (destructionFX != null)
-            Instantiate(destructionFX, transform.position, Quaternion.identity);
-        else
-            Debug.LogWarning("Player.destructionFX is null; skipping VFX.");
-
+        Instantiate(destructionFX, transform.position, Quaternion.identity); //generating destruction visual effect and destroying the 'Player' object
         Destroy(gameObject);
     }
 }
