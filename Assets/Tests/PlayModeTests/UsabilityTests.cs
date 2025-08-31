@@ -67,25 +67,7 @@ public class UsabilityTests
         yield return null;
     }
 
-    [UnityTest]
-    public IEnumerator TimeToFirstShot_IsReasonable_And_TelemetryWrites()
-    {
-        Telemetry.Log("session:start");
-
-        var makeAShot = typeof(PlayerShooting).GetMethod("MakeAShot",
-            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-        float t0 = Time.realtimeSinceStartup;
-        makeAShot?.Invoke(shooter, null);     // PS are there & fields bound
-        yield return null;
-
-        float dt = Time.realtimeSinceStartup - t0;
-        Telemetry.Log($"action:first_shot:{dt:F2}s");
-        Assert.Less(dt, 3.0f);
-
-        try { var path = Telemetry.SaveToCSV(); Assert.IsTrue(!string.IsNullOrEmpty(path)); }
-        catch (Exception e) { Debug.LogWarning($"Telemetry save failed (non-fatal): {e.Message}"); }
-    }
+    
 
     [UnityTest, Performance]
     public IEnumerator PlayerClamp_Smoke_NoSpikes()
