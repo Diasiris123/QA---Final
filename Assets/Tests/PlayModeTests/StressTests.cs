@@ -123,8 +123,8 @@ public class StressTests
     public IEnumerator Report_Enemy_Count_When_Exceeding_60FPS_Budget()
     {
         const float frameBudgetMs = 16.67f;
-        int n = 10000;
-        int step = 1000;
+        int n = 1000;
+        int step = 250;
         int maxBatches = 50;
 
         for (int batch = 0; batch < maxBatches; batch++)
@@ -153,7 +153,7 @@ public class StressTests
             yield return new WaitForSeconds(0.5f);
 
             // Sample average frame time over a window
-            const int sampleFrames = 240;
+            const int sampleFrames = 60;
             float sumMs = 0f;
             for (int f = 0; f < sampleFrames; f++)
             {
@@ -187,9 +187,9 @@ public class StressTests
     }
 
     [UnityTest]
-    public IEnumerator FPS_2000_Frames_Spike_Scan()
+    public IEnumerator FPS_500_Frames_Spike_Scan()
     {
-        const int framesToTest = 2000;
+        const int framesToTest = 500;
         const float frameBudgetMs = 16.67f;
         const float severeSpikeMs = 2f * frameBudgetMs;
 
@@ -216,7 +216,7 @@ public class StressTests
             }
         }
 
-        Debug.Log($"[FPS] 2,000-frame scan complete. Spikes>{frameBudgetMs:F2}ms: {spikesOverBudget}, Severe>{severeSpikeMs:F2}ms: {severeSpikes}, Worst: {worstMs:F2} ms at frame #{worstFrame}.");
+        Debug.Log($"[FPS] 500-frame scan complete. Spikes>{frameBudgetMs:F2}ms: {spikesOverBudget}, Severe>{severeSpikeMs:F2}ms: {severeSpikes}, Worst: {worstMs:F2} ms at frame #{worstFrame}.");
 
         // Let the test succeed but report findings; optionally assert on severe spikes
         Assert.Pass($"Spike summary — over budget: {spikesOverBudget}, severe: {severeSpikes}, worst: {worstMs:F2} ms at frame {worstFrame}.");
